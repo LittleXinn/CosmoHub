@@ -1,14 +1,11 @@
-// ===== CosmoHub Dashboard JavaScript =====
-
-// ===== API CONFIG =====
-const API_URL = window.location.origin; // Same server, or change to your Render URL
+// ===== CosmoHub Dashboard - Vercel Version =====
+const API_URL = window.location.origin;
 const BACKEND_READY = true;
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize Lucide Icons
     lucide.createIcons();
 
-    // ===== Sidebar Navigation =====
+    // Navigation
     const navItems = document.querySelectorAll('.nav-item');
     const pageRoutes = {
         'Home': 'DashboardUI.html',
@@ -30,14 +27,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (currentPage !== targetPage) {
                     window.location.href = targetPage;
                 }
-            } else {
-                navItems.forEach(nav => nav.classList.remove('active'));
-                this.classList.add('active');
             }
         });
     });
 
-    // ===== Search Bar =====
+    // Search
     const searchInput = document.querySelector('.search-bar input');
     const searchBar = document.querySelector('.search-bar');
     searchInput.addEventListener('focus', () => searchBar.style.borderColor = 'rgba(100, 100, 180, 0.4)');
@@ -49,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // ===== Notification Buttons =====
+    // Button effects
     document.querySelectorAll('.icon-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             this.style.transform = 'scale(0.92)';
@@ -57,15 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ===== View All Buttons =====
-    document.querySelectorAll('.view-all-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const cardTitle = this.closest('.card').querySelector('.card-title').textContent;
-            console.log('View all:', cardTitle);
-        });
-    });
-
-    // ===== Card Hover Effects =====
     document.querySelectorAll('.card').forEach(card => {
         card.addEventListener('mouseenter', function() {
             this.style.transform = 'translateY(-1px)';
@@ -77,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ===== TASK CHECKBOX TOGGLE =====
     function attachCheckboxListeners() {
         document.querySelectorAll('.task-checkbox').forEach(box => {
             box.addEventListener('click', function(e) {
@@ -87,49 +71,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 const taskTitle = this.closest('.task-item').querySelector('.task-title');
                 taskTitle.classList.toggle('done', isChecked);
                 lucide.createIcons();
-
-                // Update backend
-                const taskId = this.closest('.task-item').dataset.taskId;
-                if (taskId) {
-                    fetch(`${API_URL}/api/tasks/${taskId}`, {
-                        method: 'PATCH',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ done: isChecked })
-                    });
-                }
             });
         });
     }
 
-    // ============================================================
-    // ===== BACKEND DATA FUNCTIONS =====
-    // ============================================================
-
+    // Data loaders
     window.loadStats = function(stats) {
         const container = document.getElementById('stats-row');
         if (!container) return;
         container.innerHTML = '';
-
-        const statConfigs = [
-            { key: 'activeUsers', icon: 'users', color: 'purple', label: 'Active Users', showDot: true },
+        const configs = [
+            { key: 'activeUsers', icon: 'users', color: 'purple', label: 'Active Users', dot: true },
             { key: 'unreadAnnouncements', icon: 'megaphone', color: 'pink', label: 'Unread\nAnnouncements' },
             { key: 'todoTasks', icon: 'check-circle-2', color: 'cyan', label: 'To-Do\nTasks' }
         ];
-
-        statConfigs.forEach(cfg => {
-            if (stats[cfg.key] === undefined && stats[cfg.key] !== 0) return;
+        configs.forEach(cfg => {
             const val = stats[cfg.key];
             const box = document.createElement('div');
             box.className = 'stat-box';
             box.innerHTML = `
-                <div class="stat-icon-wrap ${cfg.color}">
-                    <i data-lucide="${cfg.icon}"></i>
-                </div>
+                <div class="stat-icon-wrap ${cfg.color}"><i data-lucide="${cfg.icon}"></i></div>
                 <div class="stat-info">
                     <span class="stat-number">${val}</span>
-                    <span class="stat-label">${cfg.label}${cfg.showDot ? '<span class="stat-online-dot"></span>' : ''}</span>
-                </div>
-            `;
+                    <span class="stat-label">${cfg.label}${cfg.dot ? '<span class="stat-online-dot"></span>' : ''}</span>
+                </div>`;
             container.appendChild(box);
         });
         lucide.createIcons();
@@ -139,38 +104,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('announcement-list');
         if (!container) return;
         container.innerHTML = '';
-
         if (!announcements || announcements.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <i data-lucide="megaphone"></i>
-                    <p>No announcements yet</p>
-                </div>`;
-            lucide.createIcons();
-            return;
+            container.innerHTML = `<div class="empty-state"><i data-lucide="megaphone"></i><p>No announcements yet</p></div>`;
+            lucide.createIcons(); return;
         }
-
         const colors = ['purple', 'blue', 'cyan'];
         const icons = ['megaphone', 'star', 'info'];
-
         announcements.slice(0, 5).forEach((ann, i) => {
-            const color = colors[i % colors.length];
-            const icon = icons[i % icons.length];
             const item = document.createElement('div');
             item.className = 'announcement-item';
             item.innerHTML = `
-                <div class="announcement-icon-wrap ${color}">
-                    <i data-lucide="${icon}"></i>
-                </div>
+                <div class="announcement-icon-wrap ${colors[i % 3]}"><i data-lucide="${icons[i % 3]}"></i></div>
                 <div class="announcement-body">
                     <div class="announcement-title">${ann.title}</div>
                     <div class="announcement-desc">${ann.description}</div>
                     <div class="announcement-meta">
                         <span class="announcement-time">${ann.time || ann.date}</span>
-                        <span class="announcement-dot ${color}"></span>
+                        <span class="announcement-dot ${colors[i % 3]}"></span>
                     </div>
-                </div>
-            `;
+                </div>`;
             container.appendChild(item);
         });
         lucide.createIcons();
@@ -180,17 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('events-list');
         if (!container) return;
         container.innerHTML = '';
-
-        if (!events || events.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state">
-                    <i data-lucide="calendar"></i>
-                    <p>No upcoming events</p>
-                </div>`;
-            lucide.createIcons();
-            return;
-        }
-
         events.forEach(evt => {
             const item = document.createElement('div');
             item.className = 'event-item';
@@ -202,12 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="event-body">
                     <div class="event-title">${evt.title}</div>
                     <div class="event-time">${evt.event_time}</div>
-                    <span class="event-tag ${evt.type}">
-                        <span class="event-tag-dot"></span>
-                        ${evt.type.charAt(0).toUpperCase() + evt.type.slice(1)}
-                    </span>
-                </div>
-            `;
+                    <span class="event-tag ${evt.type}"><span class="event-tag-dot"></span>${evt.type.charAt(0).toUpperCase() + evt.type.slice(1)}</span>
+                </div>`;
             container.appendChild(item);
         });
     };
@@ -216,32 +153,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('communities-grid');
         if (!container) return;
         container.innerHTML = '';
-
-        if (!communities || communities.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state" style="grid-column: 1 / -1;">
-                    <i data-lucide="users"></i>
-                    <p>No communities yet</p>
-                </div>`;
-            lucide.createIcons();
-            return;
-        }
-
         const colors = ['purple', 'blue', 'cyan', 'pink'];
         const icons = ['code-2', 'flask-conical', 'sigma', 'gamepad-2'];
-
         communities.forEach((comm, i) => {
-            const color = colors[i % colors.length];
-            const icon = comm.icon || icons[i % icons.length];
             const card = document.createElement('div');
             card.className = 'community-card';
             card.innerHTML = `
-                <div class="community-card-icon ${color}">
-                    <i data-lucide="${icon}"></i>
-                </div>
+                <div class="community-card-icon ${colors[i % 4]}"><i data-lucide="${comm.icon || icons[i % 4]}"></i></div>
                 <span class="community-card-name">${comm.name}</span>
-                <span class="community-card-members">${comm.members} members</span>
-            `;
+                <span class="community-card-members">${comm.members} members</span>`;
             container.appendChild(card);
         });
         lucide.createIcons();
@@ -250,63 +170,27 @@ document.addEventListener('DOMContentLoaded', function() {
     window.loadUserProfile = function(user) {
         const nameEl = document.getElementById('profile-name');
         if (nameEl) nameEl.textContent = user.name || '--';
-
         const handleEl = document.getElementById('profile-handle');
         if (handleEl) handleEl.textContent = user.handle || '--';
-
         const roleEl = document.getElementById('profile-role');
         if (roleEl) roleEl.textContent = user.role || '--';
-
-        if (user.avatar) {
-            loadProfileAvatar(user.avatar);
-        }
-    };
-
-    window.loadProfileAvatar = function(imageUrl) {
-        const avatarContainer = document.getElementById('profile-avatar');
-        if (!avatarContainer) return;
-
-        const existingImg = avatarContainer.querySelector('img');
-        if (existingImg) existingImg.remove();
-
-        const img = document.createElement('img');
-        img.src = imageUrl;
-        img.alt = 'User';
-        img.onload = () => avatarContainer.classList.add('has-image');
-        img.onerror = () => avatarContainer.classList.remove('has-image');
-        avatarContainer.appendChild(img);
     };
 
     window.loadSchedule = function(schedule) {
         const container = document.getElementById('schedule-list');
         const labelEl = document.getElementById('schedule-label');
         if (!container) return;
-
-        if (labelEl && schedule.date) {
-            labelEl.textContent = schedule.date;
-        }
-
+        if (labelEl && schedule.date) labelEl.textContent = schedule.date;
         container.innerHTML = '';
-
         if (!schedule.items || schedule.items.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state" style="padding: 16px;">
-                    <i data-lucide="clock"></i>
-                    <p>No events today</p>
-                </div>`;
-            lucide.createIcons();
-            return;
+            container.innerHTML = `<div class="empty-state" style="padding: 16px;"><i data-lucide="clock"></i><p>No events today</p></div>`;
+            lucide.createIcons(); return;
         }
-
         const colors = ['purple', 'green', 'blue'];
         schedule.items.forEach((item, i) => {
             const el = document.createElement('div');
             el.className = 'schedule-item';
-            el.innerHTML = `
-                <span class="schedule-time">${item.time}</span>
-                <span class="schedule-dot ${colors[i % colors.length]}"></span>
-                <span class="schedule-text">${item.title}</span>
-            `;
+            el.innerHTML = `<span class="schedule-time">${item.time}</span><span class="schedule-dot ${colors[i % 3]}"></span><span class="schedule-text">${item.title}</span>`;
             container.appendChild(el);
         });
     };
@@ -315,34 +199,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('tasks-list');
         if (!container) return;
         container.innerHTML = '';
-
         if (!tasks || tasks.length === 0) {
-            container.innerHTML = `
-                <div class="empty-state" style="padding: 16px;">
-                    <i data-lucide="check-circle-2"></i>
-                    <p>No tasks yet</p>
-                </div>`;
-            lucide.createIcons();
-            return;
+            container.innerHTML = `<div class="empty-state" style="padding: 16px;"><i data-lucide="check-circle-2"></i><p>No tasks yet</p></div>`;
+            lucide.createIcons(); return;
         }
-
         tasks.forEach(task => {
             const isDone = task.done;
             const item = document.createElement('div');
             item.className = 'task-item';
-            item.dataset.taskId = task.id;
             item.innerHTML = `
-                <div class="task-checkbox ${isDone ? 'checked' : 'unchecked'}">
-                    <i data-lucide="check"></i>
-                </div>
+                <div class="task-checkbox ${isDone ? 'checked' : 'unchecked'}"><i data-lucide="check"></i></div>
                 <div class="task-info">
                     <div class="task-title ${isDone ? 'done' : ''}">${task.title}</div>
                     <div class="task-due">${task.due}</div>
-                </div>
-            `;
+                </div>`;
             container.appendChild(item);
         });
-
         attachCheckboxListeners();
         lucide.createIcons();
     };
@@ -359,20 +231,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (msgBadge) msgBadge.textContent = messages !== undefined ? messages : '--';
     };
 
-    // ===== LOAD DATA FROM BACKEND =====
-    if (BACKEND_READY) {
-        fetch(`${API_URL}/api/stats`).then(r => r.json()).then(loadStats);
-        fetch(`${API_URL}/api/announcements`).then(r => r.json()).then(loadAnnouncements);
-        fetch(`${API_URL}/api/events`).then(r => r.json()).then(loadEvents);
-        fetch(`${API_URL}/api/communities`).then(r => r.json()).then(loadCommunities);
-        fetch(`${API_URL}/api/user/profile`).then(r => r.json()).then(loadUserProfile);
-        fetch(`${API_URL}/api/schedule`).then(r => r.json()).then(loadSchedule);
-        fetch(`${API_URL}/api/tasks`).then(r => r.json()).then(loadTasks);
-        fetch(`${API_URL}/api/online`).then(r => r.json()).then(d => loadOnlineCount(d.count));
-        fetch(`${API_URL}/api/badges`).then(r => r.json()).then(d => loadBadges(d.notifications, d.messages));
-    }
+    // Load all data from API
+    fetch(`${API_URL}/api/stats`).then(r => r.json()).then(loadStats);
+    fetch(`${API_URL}/api/announcements`).then(r => r.json()).then(loadAnnouncements);
+    fetch(`${API_URL}/api/events`).then(r => r.json()).then(loadEvents);
+    fetch(`${API_URL}/api/communities`).then(r => r.json()).then(loadCommunities);
+    fetch(`${API_URL}/api/profile`).then(r => r.json()).then(loadUserProfile);
+    fetch(`${API_URL}/api/schedule`).then(r => r.json()).then(loadSchedule);
+    fetch(`${API_URL}/api/tasks`).then(r => r.json()).then(loadTasks);
+    fetch(`${API_URL}/api/online`).then(r => r.json()).then(d => loadOnlineCount(d.count));
+    fetch(`${API_URL}/api/badges`).then(r => r.json()).then(d => loadBadges(d.notifications, d.messages));
 
-    // ===== Console Welcome =====
-    console.log('%c🚀 CosmoHub Dashboard Loaded', 'color: #a855f7; font-size: 16px; font-weight: bold;');
-    console.log('%cBackend API: ' + API_URL, 'color: #22d3ee; font-size: 12px;');
+    console.log('%c🚀 CosmoHub Dashboard (Vercel)', 'color: #a855f7; font-size: 16px; font-weight: bold;');
 });
