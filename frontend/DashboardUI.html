@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CosmoHub Dashboard</title>
+    <link rel="stylesheet" href="DashboardUI.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+<base target="_blank">
+</head>
+<body>
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg viewBox="0 0 32 32" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="16" cy="16" r="6"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(-30 16 16)"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(30 16 16)"/>
+                </svg>
+                <span class="logo-text">COSMOHUB</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active">
+                        <i data-lucide="home" class="nav-icon"></i>
+                        <span class="nav-text">Home</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="message-circle" class="nav-icon"></i>
+                        <span class="nav-text">Chats</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="megaphone" class="nav-icon"></i>
+                        <span class="nav-text">Announcements</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="library" class="nav-icon"></i>
+                        <span class="nav-text">Galaxy Library</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="calendar" class="nav-icon"></i>
+                        <span class="nav-text">Cosmic Calendar</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        <span class="nav-text">Communities</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="user" class="nav-icon"></i>
+                        <span class="nav-text">Profile</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        <span class="nav-text">Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <img src="assets/card2-bg.png" alt="Planet" class="footer-planet">
+                <p class="footer-text">The universe is vast,<br>but knowledge makes<br>it infinite.</p>
+                <p class="footer-text2">Keep exploring. ✦</p>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span class="online-count-dot"></span>
+                <span class="online-count" id="online-count">--</span> Online
+                <button class="collapse-btn"><i data-lucide="chevrons-left"></i></button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="search-bar">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" placeholder="Search in CosmoHub...">
+                    <span class="shortcut">Ctrl /</span>
+                </div>
+                <div class="top-actions">
+                    <button class="icon-btn notification-btn">
+                        <i data-lucide="bell" class="action-icon"></i>
+                        <span class="badge" id="notif-badge">--</span>
+                    </button>
+                    <button class="icon-btn message-btn">
+                        <i data-lucide="mail" class="action-icon"></i>
+                        <span class="badge" id="msg-badge">--</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+
+                <!-- Left Column -->
+                <div class="left-column">
+
+                    <!-- Welcome Banner -->
+                    <div class="card welcome-banner">
+                        <div class="welcome-content">
+                            <h2>Welcome back, Explorer! 👋</h2>
+                            <p class="welcome-subtitle">In a universe of possibilities, <em>learning lights the way.</em></p>
+                            <div class="stats-row" id="stats-row">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <img src="assets/card1-bg.png" alt="Galaxy" class="banner-bg">
+                    </div>
+
+                    <!-- Middle Row: Announcements + Upcoming Events -->
+                    <div class="middle-row">
+
+                        <!-- Recent Announcements -->
+                        <div class="card recent-announcements">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Announcements</h3>
+                                <button class="view-all-btn">View all</button>
+                            </div>
+                            <div class="announcement-list" id="announcement-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Upcoming Events -->
+                        <div class="card upcoming-events">
+                            <div class="card-header">
+                                <h3 class="card-title">Upcoming Events</h3>
+                                <button class="view-all-btn">View calendar</button>
+                            </div>
+                            <div class="events-list" id="events-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Trending Communities -->
+                    <div class="card trending-communities">
+                        <div class="card-header">
+                            <h3 class="card-title">Trending Communities</h3>
+                            <button class="view-all-btn">View all</button>
+                        </div>
+                        <div class="communities-grid" id="communities-grid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+
+                    <!-- User Profile Card -->
+                    <div class="card profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar" id="profile-avatar">
+                                <div class="profile-avatar-placeholder">
+                                    <i data-lucide="user" class="profile-placeholder-icon"></i>
+                                </div>
+                            </div>
+                            <div class="profile-info">
+                                <div class="profile-name-row">
+                                    <span class="profile-name" id="profile-name">--</span>
+                                    <span class="profile-status-dot"></span>
+                                </div>
+                                <span class="profile-handle" id="profile-handle">--</span>
+                                <span class="profile-role" id="profile-role">--</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Today's Schedule -->
+                    <div class="card today-schedule">
+                        <div class="schedule-header">
+                            <span class="schedule-label" id="schedule-label">--</span>
+                        </div>
+                        <div class="schedule-list" id="schedule-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- My Tasks -->
+                    <div class="card my-tasks">
+                        <div class="card-header">
+                            <h3 class="card-title">My Tasks</h3>
+                            <button class="view-all-btn">View all</button>
+                        </div>
+                        <div class="tasks-list" id="tasks-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script src="DashboardUI.js"></script>
+</body>
+</html>

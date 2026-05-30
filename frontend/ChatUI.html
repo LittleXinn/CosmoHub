@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CosmoHub - Chat</title>
+    <link rel="stylesheet" href="ChatUI.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Left Sidebar -->
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg viewBox="0 0 32 32" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="16" cy="16" r="6"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(-30 16 16)"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(30 16 16)"/>
+                </svg>
+                <span class="logo-text">COSMOHUB</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <i data-lucide="home" class="nav-icon"></i>
+                        <span class="nav-text">Home</span>
+                    </li>
+                    <li class="nav-item active">
+                        <i data-lucide="message-circle" class="nav-icon"></i>
+                        <span class="nav-text">Chats</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="megaphone" class="nav-icon"></i>
+                        <span class="nav-text">Announcements</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="library" class="nav-icon"></i>
+                        <span class="nav-text">Galaxy Library</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="calendar" class="nav-icon"></i>
+                        <span class="nav-text">Cosmic Calendar</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        <span class="nav-text">Communities</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="user" class="nav-icon"></i>
+                        <span class="nav-text">Profile</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        <span class="nav-text">Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <img src="assets/card2-bg.png" alt="Planet" class="footer-planet">
+                <p class="footer-text">The universe is vast,<br>but knowledge makes<br>it infinite.</p>
+                <p class="footer-text2">Keep exploring. ✦</p>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span class="online-count-dot"></span>
+                <span class="online-count" id="online-count">--</span> Online
+                <button class="collapse-btn"><i data-lucide="chevrons-left"></i></button>
+            </div>
+        </aside>
+
+        <!-- Chat List Panel -->
+        <div class="chat-list-panel">
+            <div class="chat-list-header">
+                <h2>Chats</h2>
+                <div class="search-box">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" placeholder="Search messages or users..." id="searchInput">
+                </div>
+            </div>
+
+            <div class="chat-tabs">
+                <button class="tab-btn active" data-tab="global">GLOBAL CHAT</button>
+                <button class="tab-btn" data-tab="direct">DIRECT MESSAGES</button>
+            </div>
+
+            <div class="chat-categories">
+                <div class="category-item active" id="globalChatItem">
+                    <div class="category-icon">#</div>
+                    <div class="category-info">
+                        <span class="category-name">Global Chat</span>
+                        <span class="category-desc">Open discussion for everyone</span>
+                    </div>
+                    <span class="member-count" id="globalMemberCount">0</span>
+                </div>
+            </div>
+
+            <div class="recent-header">RECENT CONVERSATIONS</div>
+            <div class="recent-list" id="recentList">
+                <!-- Populated by JS -->
+            </div>
+
+            <button class="new-message-btn">
+                <i data-lucide="plus" class="btn-icon"></i>
+                New Message
+            </button>
+        </div>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <span class="chat-prefix">#</span>
+                    <div class="chat-icon" id="chatHeaderIcon"></div>
+                    <h2 id="chatTitle">Global Chat</h2>
+                    <div class="online-status">
+                        <span class="status-dot"></span>
+                        <span id="onlineCount">0 members online</span>
+                    </div>
+                </div>
+                <div class="chat-header-actions">
+                    <button class="icon-btn" title="Pin">
+                        <i data-lucide="pin" class="action-icon"></i>
+                    </button>
+                    <button class="icon-btn" title="Search">
+                        <i data-lucide="search" class="action-icon"></i>
+                    </button>
+                    <button class="icon-btn" title="Members">
+                        <i data-lucide="users" class="action-icon"></i>
+                    </button>
+                    <button class="icon-btn" title="More">
+                        <i data-lucide="more-horizontal" class="action-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <!-- Messages populated by JS -->
+            </div>
+
+            <div class="chat-input-area">
+                <button class="input-action-btn">
+                    <i data-lucide="plus" class="input-icon"></i>
+                </button>
+                <div class="input-wrapper">
+                    <input type="text" placeholder="Message # Global Chat..." id="messageInput">
+                </div>
+                <button class="input-action-btn">
+                    <i data-lucide="smile" class="input-icon"></i>
+                </button>
+                <button class="input-action-btn gif-btn">GIF</button>
+                <button class="input-action-btn">
+                    <i data-lucide="paperclip" class="input-icon"></i>
+                </button>
+                <button class="send-btn" id="sendBtn">
+                    <i data-lucide="send" class="send-icon"></i>
+                </button>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="sidebar right-sidebar">
+            <div class="right-sidebar-header">
+                <div class="channel-icon-large" id="rightChannelIcon">
+                    <i data-lucide="orbit" class="channel-icon-svg"></i>
+                </div>
+                <h3 id="rightChannelName">Global Chat</h3>
+                <p id="rightChannelDesc">Open discussion for all CosmoHub members.</p>
+                <div class="channel-stats">
+                    <div class="stat">
+                        <span class="stat-value" id="rightOnlineCount">0</span>
+                        <span class="stat-label">Members Online</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-value" id="rightTotalCount">0</span>
+                        <span class="stat-label">Total Members</span>
+                    </div>
+                </div>
+                <button class="invite-btn">
+                    <i data-lucide="user-plus" class="btn-icon"></i>
+                    Invite Members
+                </button>
+            </div>
+
+            <div class="online-members-section">
+                <div class="section-header">
+                    <span>ONLINE MEMBERS</span>
+                    <span class="count" id="onlineMembersCount">0</span>
+                </div>
+                <div class="members-list" id="membersList">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <button class="view-all-btn">
+                View All Members
+                <i data-lucide="chevron-right" class="btn-icon"></i>
+            </button>
+        </aside>
+
+        <!-- Top Right Actions -->
+        <div class="top-actions">
+            <button class="top-action-btn">
+                <i data-lucide="bell" class="action-icon"></i>
+                <span class="badge" id="notifBadge">0</span>
+            </button>
+            <button class="top-action-btn">
+                <i data-lucide="users" class="action-icon"></i>
+            </button>
+            <button class="top-action-btn">
+                <i data-lucide="more-horizontal" class="action-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="ChatUI.js"></script>
+</body>
+</html>

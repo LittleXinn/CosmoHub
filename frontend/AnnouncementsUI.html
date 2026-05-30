@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CosmoHub — Announcements</title>
+    <link rel="stylesheet" href="AnnouncementsUI.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+<base target="_blank">
+</head>
+<body>
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg viewBox="0 0 32 32" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="16" cy="16" r="6"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(-30 16 16)"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(30 16 16)"/>
+                </svg>
+                <span class="logo-text">COSMOHUB</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <i data-lucide="home" class="nav-icon"></i>
+                        <span class="nav-text">Home</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="message-circle" class="nav-icon"></i>
+                        <span class="nav-text">Chats</span>
+                    </li>
+                    <li class="nav-item active">
+                        <i data-lucide="megaphone" class="nav-icon"></i>
+                        <span class="nav-text">Announcements</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="library" class="nav-icon"></i>
+                        <span class="nav-text">Galaxy Library</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="calendar" class="nav-icon"></i>
+                        <span class="nav-text">Cosmic Calendar</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        <span class="nav-text">Communities</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="user" class="nav-icon"></i>
+                        <span class="nav-text">Profile</span>
+                    </li>
+                    <li class="nav-item">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        <span class="nav-text">Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <img src="assets/card2-bg.png" alt="Planet" class="footer-planet">
+                <p class="footer-text">The universe is vast,<br>but knowledge makes<br>it infinite.</p>
+                <p class="footer-text2">Keep exploring. ✦</p>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span class="online-count-dot"></span>
+                <span class="online-count" id="online-count">--</span> Online
+                <button class="collapse-btn"><i data-lucide="chevrons-left"></i></button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="search-bar">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" placeholder="Search in CosmoHub...">
+                    <span class="shortcut">Ctrl /</span>
+                </div>
+                <div class="top-actions">
+                    <button class="icon-btn notification-btn">
+                        <i data-lucide="bell" class="action-icon"></i>
+                        <span class="badge" id="notif-badge">--</span>
+                    </button>
+                    <button class="icon-btn message-btn">
+                        <i data-lucide="mail" class="action-icon"></i>
+                        <span class="badge" id="msg-badge">--</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Announcements Page -->
+            <div class="page-content">
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="page-title-wrap">
+                        <h1 class="page-title">Announcements</h1>
+                        <p class="page-subtitle">Stay updated with the latest news and important updates.</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-primary" id="new-announcement-btn">
+                            <i data-lucide="plus"></i>
+                            <span>New Announcement</span>
+                        </button>
+                        <div class="dropdown" id="category-dropdown">
+                            <button class="btn btn-ghost dropdown-toggle">
+                                <span id="current-category">All Categories</span>
+                                <i data-lucide="chevron-down" class="dropdown-chevron"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                                <div class="dropdown-item active" data-category="all">
+                                    <i data-lucide="layout-grid"></i>
+                                    <span>All Announcements</span>
+                                    <span class="dropdown-count">28</span>
+                                </div>
+                                <div class="dropdown-item" data-category="academic">
+                                    <i data-lucide="graduation-cap"></i>
+                                    <span>Academic</span>
+                                    <span class="dropdown-count">8</span>
+                                </div>
+                                <div class="dropdown-item" data-category="events">
+                                    <i data-lucide="calendar-days"></i>
+                                    <span>Events</span>
+                                    <span class="dropdown-count">6</span>
+                                </div>
+                                <div class="dropdown-item" data-category="general">
+                                    <i data-lucide="info"></i>
+                                    <span>General</span>
+                                    <span class="dropdown-count">5</span>
+                                </div>
+                                <div class="dropdown-item" data-category="community">
+                                    <i data-lucide="users"></i>
+                                    <span>Community</span>
+                                    <span class="dropdown-count">5</span>
+                                </div>
+                                <div class="dropdown-item" data-category="system">
+                                    <i data-lucide="cpu"></i>
+                                    <span>System</span>
+                                    <span class="dropdown-count">4</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="category-tabs">
+                    <button class="tab active" data-tab="all">
+                        <span>All</span>
+                    </button>
+                    <button class="tab" data-tab="academic">
+                        <span>Academic</span>
+                    </button>
+                    <button class="tab" data-tab="events">
+                        <span>Events</span>
+                    </button>
+                    <button class="tab" data-tab="general">
+                        <span>General</span>
+                    </button>
+                    <button class="tab" data-tab="community">
+                        <span>Community</span>
+                    </button>
+                    <button class="tab" data-tab="system">
+                        <span>System</span>
+                    </button>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="content-grid">
+
+                    <!-- Announcements Feed -->
+                    <div class="feed-column">
+                        <div class="announcements-feed" id="announcements-feed">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Right Sidebar -->
+                    <div class="info-column">
+
+                        <!-- Categories Card -->
+                        <div class="card categories-card">
+                            <h3 class="card-title">Categories</h3>
+                            <div class="category-list" id="category-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Recent Highlights -->
+                        <div class="card highlights-card">
+                            <h3 class="card-title">Recent Highlights</h3>
+                            <div class="highlights-list" id="highlights-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Never Miss an Update -->
+                        <div class="card notify-card">
+                            <div class="notify-icon-wrap">
+                                <i data-lucide="bell-ring"></i>
+                            </div>
+                            <h3 class="notify-title">Never Miss an Update</h3>
+                            <p class="notify-desc">Enable notifications to get instant alerts for new announcements.</p>
+                            <button class="btn btn-primary btn-full" id="enable-notify-btn">
+                                <i data-lucide="bell"></i>
+                                <span>Enable Notifications</span>
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <!-- New Announcement Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">New Announcement</h3>
+                <button class="modal-close" id="modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" class="form-input" placeholder="Enter announcement title...">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <div class="category-pills">
+                        <button class="pill active" data-pill="academic">Academic</button>
+                        <button class="pill" data-pill="events">Events</button>
+                        <button class="pill" data-pill="general">General</button>
+                        <button class="pill" data-pill="community">Community</button>
+                        <button class="pill" data-pill="system">System</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-textarea" rows="4" placeholder="Write your announcement..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="form-checkbox">
+                        <span>Pin this announcement</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" id="modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="modal-publish">Publish</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="AnnouncementsUI.js"></script>
+</body>
+</html>
