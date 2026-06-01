@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Calendar - CosmoHub</title>
+    <link rel="stylesheet" href="CosmicCalendarUI.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <base target="_blank">
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+    <canvas id="starfield-canvas"></canvas>
+
+    <div class="dashboard-container">
+        <!-- Sidebar (IDENTICAL to Galaxy Library) -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <svg viewBox="0 0 32 32" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="16" cy="16" r="6"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(-30 16 16)"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(30 16 16)"/>
+                </svg>
+                <span class="logo-text">COSMOHUB</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item" data-page="Home">
+                        <i data-lucide="home" class="nav-icon"></i>
+                        <span class="nav-text">Home</span>
+                    </li>
+                    <li class="nav-item" data-page="Chats">
+                        <i data-lucide="message-circle" class="nav-icon"></i>
+                        <span class="nav-text">Chats</span>
+                    </li>
+                    <li class="nav-item" data-page="Announcements">
+                        <i data-lucide="megaphone" class="nav-icon"></i>
+                        <span class="nav-text">Announcements</span>
+                    </li>
+                    <li class="nav-item" data-page="Galaxy Library">
+                        <i data-lucide="library" class="nav-icon"></i>
+                        <span class="nav-text">Galaxy Library</span>
+                    </li>
+                    <li class="nav-item active" data-page="Cosmic Calendar">
+                        <i data-lucide="calendar" class="nav-icon"></i>
+                        <span class="nav-text">Cosmic Calendar</span>
+                    </li>
+                    <li class="nav-item" data-page="Communities">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        <span class="nav-text">Communities</span>
+                    </li>
+                    <li class="nav-item" data-page="Profile">
+                        <i data-lucide="user" class="nav-icon"></i>
+                        <span class="nav-text">Profile</span>
+                    </li>
+                    <li class="nav-item" data-page="Settings">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        <span class="nav-text">Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="footer-visual">
+                    <svg viewBox="0 0 200 80" class="footer-planet-svg" preserveAspectRatio="xMidYMid slice">
+                        <defs>
+                            <radialGradient id="planetGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#a855f7" stop-opacity="0.6"/>
+                                <stop offset="50%" stop-color="#6366f1" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#06060f" stop-opacity="0"/>
+                            </radialGradient>
+                        </defs>
+                        <circle cx="140" cy="40" r="35" fill="url(#planetGrad)"/>
+                        <ellipse cx="140" cy="40" rx="50" ry="12" transform="rotate(-20 140 40)" fill="none" stroke="#a855f7" stroke-opacity="0.15" stroke-width="1"/>
+                        <ellipse cx="140" cy="40" rx="50" ry="12" transform="rotate(20 140 40)" fill="none" stroke="#a855f7" stroke-opacity="0.15" stroke-width="1"/>
+                    </svg>
+                </div>
+                <p class="footer-text">Time is the most<br>valuable currency<br>in the universe.</p>
+                <p class="footer-text2">Plan wisely. ✦</p>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span class="online-count-dot"></span>
+                <span class="online-count" id="online-count">0</span> Online
+                <button class="collapse-btn"><i data-lucide="chevrons-left"></i></button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar with Search + Actions -->
+            <header class="top-bar">
+                <div class="search-bar">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" id="calendar-search" placeholder="Search your tasks, events...">
+                    <span class="shortcut">Ctrl /</span>
+                </div>
+                <div class="top-actions-inline">
+                    <button class="icon-btn notification-btn" title="Notifications">
+                        <i data-lucide="bell" class="action-icon"></i>
+                        <span class="badge" id="notif-badge">0</span>
+                    </button>
+                    <button class="icon-btn message-btn" title="Messages">
+                        <i data-lucide="mail" class="action-icon"></i>
+                        <span class="badge" id="msg-badge">0</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Wrapper -->
+            <div class="content-wrapper">
+                <!-- Calendar Content -->
+                <div class="calendar-content">
+                    <!-- Calendar Panel (Background Image covers everything inside) -->
+                    <div class="calendar-panel">
+                        <!-- Calendar Header -->
+                        <div class="calendar-hero">
+                            <div class="calendar-hero-left">
+                                <h1 class="calendar-hero-title">Cosmic Calendar</h1>
+                                <p class="calendar-hero-subtitle">Organize your schedule. Reach for the stars. <span style="color: var(--accent-purple);">✦</span></p>
+                            </div>
+                            <div class="calendar-hero-right">
+                                <button class="btn-primary new-event-btn" id="new-event-btn">
+                                    <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                                    New Event
+                                </button>
+                                <button class="btn-secondary today-btn" id="today-btn">Today</button>
+                            </div>
+                        </div>
+
+                        <!-- Month Selector -->
+                        <div class="month-selector" id="month-selector">
+                            <span class="month-selector-label" id="month-selector-label">May 2025</span>
+                            <i data-lucide="chevron-down" class="month-selector-arrow"></i>
+                        </div>
+
+                        <!-- Calendar Grid Wrapper -->
+                        <div class="calendar-grid-wrapper">
+                            <div class="calendar-weekdays">
+                                <div class="weekday">Sun</div>
+                                <div class="weekday">Mon</div>
+                                <div class="weekday">Tue</div>
+                                <div class="weekday">Wed</div>
+                                <div class="weekday">Thu</div>
+                                <div class="weekday">Fri</div>
+                                <div class="weekday">Sat</div>
+                            </div>
+                            <div class="calendar-grid" id="calendar-grid">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Footer Legend -->
+                    <div class="calendar-footer">
+                        <div class="category-legend" id="category-legend">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar -->
+                <aside class="right-sidebar">
+                    <!-- This Month Categories -->
+                    <div class="card this-month-card">
+                        <h3 class="card-title">This Month</h3>
+                        <div class="category-breakdown" id="category-breakdown">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Up Next (Today's tasks only, max 2 visible) -->
+                    <div class="card upcoming-card">
+                        <div class="card-header-row">
+                            <div class="card-header-left">
+                                <h3 class="card-title">Up Next</h3>
+                                <span class="upcoming-count" id="upcoming-count">0</span>
+                            </div>
+                            <button class="view-all-btn-small" id="view-all-upnext-btn">
+                                <span>View All</span>
+                                <i data-lucide="arrow-right" style="width: 11px; height: 11px;"></i>
+                            </button>
+                        </div>
+                        <div class="upcoming-list" id="upcoming-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </main>
+    </div>
+
+
+    <!-- Today's Tasks Modal -->
+    <div class="modal-overlay" id="upnext-modal">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <h3>Today's Tasks</h3>
+                    <span class="day-modal-subtitle" id="upnext-modal-subtitle">0 items</span>
+                </div>
+                <button class="modal-close" id="upnext-modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="day-items-list" id="upnext-modal-list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="upnext-modal-done">Done</button>
+            </div>
+        </div>
+    </div>
+    <!-- Month/Year Picker Modal -->
+    <div class="modal-overlay" id="month-picker-modal">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h3>Jump to Month</h3>
+                <button class="modal-close" id="month-picker-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="picker-grid" id="month-picker-grid">
+                    <!-- Months populated by JS -->
+                </div>
+                <div class="year-selector">
+                    <button class="icon-btn year-nav" id="year-prev"><i data-lucide="chevron-left"></i></button>
+                    <span class="year-label" id="year-label">2025</span>
+                    <button class="icon-btn year-nav" id="year-next"><i data-lucide="chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="month-picker-cancel">Cancel</button>
+                <button class="btn-primary" id="month-picker-confirm">Go</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day Detail Modal -->
+    <div class="modal-overlay" id="day-modal">
+        <div class="modal modal-day">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <h3 id="day-modal-title">May 15</h3>
+                    <span class="day-modal-subtitle" id="day-modal-subtitle">3 items</span>
+                </div>
+                <button class="modal-close" id="day-modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="day-items-list" id="day-items-list">
+                    <!-- Populated by JS -->
+                </div>
+                <button class="btn-primary add-item-inline" id="add-item-inline-btn" style="width: 100%; margin-top: 12px;">
+                    <i data-lucide="plus" style="width: 14px; height: 14px;"></i>
+                    Add Item to This Day
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Item Modal -->
+    <div class="modal-overlay" id="item-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="item-modal-title">Add Item</h3>
+                <button class="modal-close" id="item-modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="upload-fields">
+                    <div class="field-group">
+                        <label>Title</label>
+                        <input type="text" id="item-title" placeholder="What do you need to do?">
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label>Category</label>
+                            <select id="item-category">
+                                <option value="todo">To Do / Task</option>
+                                <option value="event">Event</option>
+                                <option value="meeting">Meeting</option>
+                                <option value="deadline">Deadline</option>
+                                <option value="personal">Personal</option>
+                                <option value="study">Study</option>
+                                <option value="reminder">Reminder</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label>Date</label>
+                            <input type="date" id="item-date">
+                        </div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-group">
+                            <label>Time (optional)</label>
+                            <input type="time" id="item-time">
+                        </div>
+                        <div class="field-group">
+                            <label>Priority</label>
+                            <select id="item-priority">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>Description</label>
+                        <textarea id="item-description" rows="3" placeholder="Add details, links, notes..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="item-modal-footer">
+                <button class="btn-secondary" id="item-modal-cancel">Cancel</button>
+                <button class="btn-primary" id="item-modal-save">Save Item</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h3>Delete Item</h3>
+                <button class="modal-close" id="delete-modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="delete-warning">Are you sure you want to delete <strong id="delete-item-name">this item</strong>?</p>
+                <p class="delete-hint">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="delete-cancel">Cancel</button>
+                <button class="btn-danger" id="delete-confirm">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="CosmicCalendarUI.js"></script>
+</body>
+</html>

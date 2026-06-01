@@ -6,13 +6,21 @@
     <title>CosmoHub — Announcements</title>
     <link rel="stylesheet" href="AnnouncementsUI.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <base target="_blank">
+<base target="_blank">
 <base target="_blank">
 </head>
 <body>
+    <!-- Animated Starfield Background -->
+    <canvas id="starfield-canvas"></canvas>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
     <div class="dashboard-container">
 
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">
                 <svg viewBox="0 0 32 32" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="16" cy="16" r="6"/>
@@ -24,35 +32,35 @@
 
             <nav class="sidebar-nav">
                 <ul>
-                    <li class="nav-item">
+                    <li class="nav-item" data-page="DashboardUI.html">
                         <i data-lucide="home" class="nav-icon"></i>
                         <span class="nav-text">Home</span>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-page="ChatUI.html">
                         <i data-lucide="message-circle" class="nav-icon"></i>
                         <span class="nav-text">Chats</span>
                     </li>
-                    <li class="nav-item active">
+                    <li class="nav-item active" data-page="AnnouncementsUI.html">
                         <i data-lucide="megaphone" class="nav-icon"></i>
                         <span class="nav-text">Announcements</span>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-page="GalaxyLibraryUI.html">
                         <i data-lucide="library" class="nav-icon"></i>
                         <span class="nav-text">Galaxy Library</span>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-page="CosmicCalendarUI.html">
                         <i data-lucide="calendar" class="nav-icon"></i>
                         <span class="nav-text">Cosmic Calendar</span>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-page="CommunitiesUI.html">
                         <i data-lucide="users" class="nav-icon"></i>
                         <span class="nav-text">Communities</span>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-page="ProfileUI.html">
                         <i data-lucide="user" class="nav-icon"></i>
                         <span class="nav-text">Profile</span>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-page="SettingsUI.html">
                         <i data-lucide="settings" class="nav-icon"></i>
                         <span class="nav-text">Settings</span>
                     </li>
@@ -62,13 +70,15 @@
             <div class="sidebar-footer">
                 <img src="assets/card2-bg.png" alt="Planet" class="footer-planet">
                 <p class="footer-text">The universe is vast,<br>but knowledge makes<br>it infinite.</p>
-                <p class="footer-text2">Keep exploring. ✦</p>
+                <p class="footer-text2">Keep exploring. &#10022;</p>
             </div>
 
             <div class="sidebar-bottom">
                 <span class="online-count-dot"></span>
-                <span class="online-count" id="online-count">--</span> Online
-                <button class="collapse-btn"><i data-lucide="chevrons-left"></i></button>
+                <span class="online-count" id="online-count">0</span> Online
+                <button class="collapse-btn" id="collapse-btn" aria-label="Toggle sidebar">
+                    <i data-lucide="chevrons-left"></i>
+                </button>
             </div>
         </aside>
 
@@ -77,19 +87,15 @@
 
             <!-- Top Bar -->
             <header class="top-bar">
-                <div class="search-bar">
+                <div class="search-bar" id="search-bar">
                     <i data-lucide="search" class="search-icon"></i>
-                    <input type="text" placeholder="Search in CosmoHub...">
+                    <input type="text" placeholder="Search announcements..." id="search-input">
                     <span class="shortcut">Ctrl /</span>
                 </div>
                 <div class="top-actions">
-                    <button class="icon-btn notification-btn">
+                    <button class="icon-btn notification-btn" id="notification-btn" aria-label="Notifications">
                         <i data-lucide="bell" class="action-icon"></i>
-                        <span class="badge" id="notif-badge">--</span>
-                    </button>
-                    <button class="icon-btn message-btn">
-                        <i data-lucide="mail" class="action-icon"></i>
-                        <span class="badge" id="msg-badge">--</span>
+                        <span class="badge" id="notif-badge">0</span>
                     </button>
                 </div>
             </header>
@@ -108,44 +114,7 @@
                             <i data-lucide="plus"></i>
                             <span>New Announcement</span>
                         </button>
-                        <div class="dropdown" id="category-dropdown">
-                            <button class="btn btn-ghost dropdown-toggle">
-                                <span id="current-category">All Categories</span>
-                                <i data-lucide="chevron-down" class="dropdown-chevron"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                                <div class="dropdown-item active" data-category="all">
-                                    <i data-lucide="layout-grid"></i>
-                                    <span>All Announcements</span>
-                                    <span class="dropdown-count">28</span>
-                                </div>
-                                <div class="dropdown-item" data-category="academic">
-                                    <i data-lucide="graduation-cap"></i>
-                                    <span>Academic</span>
-                                    <span class="dropdown-count">8</span>
-                                </div>
-                                <div class="dropdown-item" data-category="events">
-                                    <i data-lucide="calendar-days"></i>
-                                    <span>Events</span>
-                                    <span class="dropdown-count">6</span>
-                                </div>
-                                <div class="dropdown-item" data-category="general">
-                                    <i data-lucide="info"></i>
-                                    <span>General</span>
-                                    <span class="dropdown-count">5</span>
-                                </div>
-                                <div class="dropdown-item" data-category="community">
-                                    <i data-lucide="users"></i>
-                                    <span>Community</span>
-                                    <span class="dropdown-count">5</span>
-                                </div>
-                                <div class="dropdown-item" data-category="system">
-                                    <i data-lucide="cpu"></i>
-                                    <span>System</span>
-                                    <span class="dropdown-count">4</span>
-                                </div>
-                            </div>
-                        </div>
+    
                     </div>
                 </div>
 
@@ -177,43 +146,40 @@
                     <!-- Announcements Feed -->
                     <div class="feed-column">
                         <div class="announcements-feed" id="announcements-feed">
-                            <!-- Populated by JS -->
+                            <div class="empty-state">
+                                <i data-lucide="megaphone"></i>
+                                <p>No announcements yet</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Right Sidebar -->
-                    <div class="info-column">
+                </div>
 
-                        <!-- Categories Card -->
-                        <div class="card categories-card">
-                            <h3 class="card-title">Categories</h3>
-                            <div class="category-list" id="category-list">
-                                <!-- Populated by JS -->
+                <!-- Right Sidebar -->
+                <div class="info-column">
+
+                    <!-- Categories Card -->
+                    <div class="card categories-card">
+                        <h3 class="card-title">Categories</h3>
+                        <div class="category-list" id="category-list">
+                            <div class="empty-state" style="padding: 16px;">
+                                <i data-lucide="layout-grid"></i>
+                                <p>No categories</p>
                             </div>
                         </div>
-
-                        <!-- Recent Highlights -->
-                        <div class="card highlights-card">
-                            <h3 class="card-title">Recent Highlights</h3>
-                            <div class="highlights-list" id="highlights-list">
-                                <!-- Populated by JS -->
-                            </div>
-                        </div>
-
-                        <!-- Never Miss an Update -->
-                        <div class="card notify-card">
-                            <div class="notify-icon-wrap">
-                                <i data-lucide="bell-ring"></i>
-                            </div>
-                            <h3 class="notify-title">Never Miss an Update</h3>
-                            <p class="notify-desc">Enable notifications to get instant alerts for new announcements.</p>
-                            <button class="btn btn-primary btn-full" id="enable-notify-btn">
-                                <i data-lucide="bell"></i>
-                                <span>Enable Notifications</span>
-                            </button>
-                        </div>
-
                     </div>
+
+                    <!-- Recent Highlights -->
+                    <div class="card highlights-card">
+                        <h3 class="card-title">Recent Highlights</h3>
+                        <div class="highlights-list" id="highlights-list">
+                            <div class="empty-state" style="padding: 16px;">
+                                <i data-lucide="star"></i>
+                                <p>No highlights</p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -231,7 +197,7 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label>Title</label>
-                    <input type="text" class="form-input" placeholder="Enter announcement title...">
+                    <input type="text" class="form-input" id="ann-title" placeholder="Enter announcement title...">
                 </div>
                 <div class="form-group">
                     <label>Category</label>
@@ -245,11 +211,11 @@
                 </div>
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea class="form-textarea" rows="4" placeholder="Write your announcement..."></textarea>
+                    <textarea class="form-textarea" id="ann-desc" rows="4" placeholder="Write your announcement..."></textarea>
                 </div>
                 <div class="form-group">
                     <label class="checkbox-label">
-                        <input type="checkbox" class="form-checkbox">
+                        <input type="checkbox" class="form-checkbox" id="ann-pinned">
                         <span>Pin this announcement</span>
                     </label>
                 </div>
@@ -262,5 +228,40 @@
     </div>
 
     <script src="AnnouncementsUI.js"></script>
+
+    <!-- Notification Settings Modal -->
+    <div class="modal-overlay" id="notif-modal-overlay">
+        <div class="modal" style="max-width: 380px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Notification Settings</h3>
+                <button class="modal-close" id="notif-modal-close"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body" >
+                <div class="notify-icon-wrap" >
+                    <i data-lucide="bell-ring" style="width: 22px; height: 22px;"></i>
+                </div>
+                <h3 class="notify-title">Never Miss an Update</h3>
+                <p class="notify-desc">Enable notifications to get instant alerts for new announcements.</p>
+                <div class="notif-toggle-row">
+                    <div class="notif-toggle-info">
+                        <div class="notif-toggle-icon">
+                            <i data-lucide="bell" style="width:16px;height:16px;"></i>
+                        </div>
+                        <div class="notif-toggle-text">
+                            <div class="notif-toggle-label">Announcements</div>
+                            <div class="notif-toggle-status" id="notif-modal-status">Off</div>
+                        </div>
+                    </div>
+                    <div class="notif-toggle-wrap">
+                        <div class="toggle-switch" id="notif-modal-toggle"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" >
+                <button class="btn btn-primary" id="notif-modal-done" class="btn-full">Done</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
