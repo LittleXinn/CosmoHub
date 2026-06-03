@@ -478,10 +478,18 @@ function renderRecentConversations() {
         }
 
         var unreadHtml = conv.unread > 0 ? '<span class="unread-badge">' + conv.unread + '</span>' : '';
+        var deleteBtn = conv.type === 'dm' ? '<button class="delete-convo-btn" title="Delete conversation" data-conv-id="' + conv.id + '" style="width:20px;height:20px;border-radius:50%;background:transparent;border:none;color:var(--text-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transition:all 0.2s ease;flex-shrink:0;margin-left:4px;"><i data-lucide="x" style="width:12px;height:12px;"></i></button>' : '';
         item.innerHTML = avatarHtml +
             '<div class="recent-info"><div class="recent-top"><span class="recent-name">' + (conv.name || 'Unknown') + '</span><span class="recent-time">' + (conv.time || '') + '</span></div>' +
-            '<div class="recent-message"><span>' + (conv.lastMessage || '') + '</span>' + unreadHtml + '</div></div>';
-        item.addEventListener('click', function() { switchConversation(conv.id, conv.type || 'dm'); });
+            '<div class="recent-message"><span>' + (conv.lastMessage || '') + '</span>' + unreadHtml + '</div></div>' + deleteBtn;
+        item.addEventListener('click', function(e) {
+            if (e.target.closest('.delete-convo-btn')) {
+                e.stopPropagation();
+                deleteConversation(conv.id, conv.name || 'Unknown');
+                return;
+            }
+            switchConversation(conv.id, conv.type || 'dm');
+        });
         elements.recentList.appendChild(item);
     });
     if (window.lucide) lucide.createIcons();
@@ -789,18 +797,39 @@ function loadMessagesForChannel(channelId) {
 }
 
 function subscribeToChannel(channelId) {
-    if (!supabaseReady || !sb) return;
-    if (realtimeChannel) { sb.removeChannel(realtimeChannel); realtimeChannel = null; }
-    realtimeChannel = sb.channel('chat-' + channelId)
+    if (!supabaseReady || !sb) { console.warn('[Realtime] Supabase not ready'); return; }
+    if (realtimeChannel) { 
+        console.log('[Realtime] Removing old channel');
+        sb.removeChannel(realtimeChannel); 
+        realtimeChannel = null; 
+    }
+    var channelName = 'chat-' + channelId;
+    var filterStr = 'channel_id=eq.' + channelId;
+    console.log('[Realtime] Subscribing to channel:', channelName, 'filter:', filterStr);
+
+    realtimeChannel = sb.channel(channelName)
         .on('postgres_changes',
-            { event: 'INSERT', schema: 'public', table: 'messages', filter: 'channel_id=eq.' + channelId },
+            { event: 'INSERT', schema: 'public', table: 'messages', filter: filterStr },
             function(payload) {
+                console.log('[Realtime] New message received:', payload);
                 var newMsg = payload.new;
                 var exists = messages.some(function(m) { return m.id === newMsg.id; });
-                if (!exists) { messages.push(newMsg); renderMessages(); }
+                if (!exists) { 
+                    console.log('[Realtime] Adding new message to array');
+                    messages.push(newMsg); 
+                    renderMessages(); 
+                } else {
+                    console.log('[Realtime] Message already exists, skipping');
+                }
             })
-        .subscribe(function(status) {
-            console.log('[CosmoHub Chat] Realtime status:', status);
+        .subscribe(function(status, err) {
+            console.log('[Realtime] Status:', status, err ? 'Error:' + err.message : '');
+            if (status === 'CHANNEL_ERROR') {
+                console.error('[Realtime] Channel error - check Supabase Realtime settings');
+            }
+            if (status === 'TIMED_OUT') {
+                console.error('[Realtime] Connection timed out');
+            }
         });
 }
 
@@ -1037,6 +1066,30 @@ function generateDMChannelId(userA, userB) {
     return 'dm:' + sorted[0] + ':' + sorted[1];
 }
 
+function deleteConversation(convId, convName) {
+    Modal.open('Delete Conversation', 
+        '<p style="color:var(--text-secondary); font-size:13px;">Are you sure you want to delete your conversation with <strong style="color:var(--text-primary);">' + convName + '</strong>?</p>' +
+        '<p style="color:var(--text-muted); font-size:11px; margin-top:8px;">This will remove the conversation from your list. The messages will still exist in the database.</p>',
+        {
+            confirmText: 'Delete',
+            onConfirm: function() {
+                // Remove from recentConversations array
+                var idx = recentConversations.findIndex(function(c) { return c.id === convId; });
+                if (idx !== -1) {
+                    recentConversations.splice(idx, 1);
+                    renderRecentConversations();
+                }
+                // If currently viewing this conversation, switch to global
+                if (currentChannelId === convId) {
+                    switchTab('global');
+                    switchConversation('global', 'global');
+                }
+                showToast('Deleted', 'Conversation removed', 'success', 2000);
+            }
+        }
+    );
+}
+
 // ===== MENU DRAWER =====
 function initMenuDrawer() {
     var menuBtn = document.getElementById('channel-menu-btn');
@@ -1134,6 +1187,11 @@ function stopPolling() {
 
 // ===== INITIALIZATION =====
 document.addEventListener('DOMContentLoaded', function() {
+    // Inject delete button hover styles
+    var style = document.createElement('style');
+    style.textContent = '.recent-item:hover .delete-convo-btn { opacity: 1 !important; } .delete-convo-btn:hover { background: rgba(239, 68, 68, 0.15) !important; color: #ef4444 !important; }';
+    document.head.appendChild(style);
+
     if (window.lucide) lucide.createIcons();
     initElements();
     initEventListeners();
