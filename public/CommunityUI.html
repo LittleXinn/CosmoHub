@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communities - CosmoHub</title>
+    <link rel="stylesheet" href="CommunityUI.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <base target="_blank">
+<base target="_blank">
+</head>
+<body>
+    <!-- Animated Starfield Background -->
+    <canvas id="starfield-canvas"></canvas>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Modal Overlay (Generic) -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Title</h3>
+                <button class="modal-close" id="modal-close" aria-label="Close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer" id="modal-footer">
+                <button class="modal-btn" id="modal-cancel">Cancel</button>
+                <button class="modal-btn primary" id="modal-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ENHANCED CREATE COMMUNITY MODAL ===== -->
+    <div class="modal-overlay" id="create-modal-overlay">
+        <div class="modal-container create-community-modal">
+            <!-- Header -->
+            <div class="modal-header">
+                <div class="modal-title-wrap">
+                    <div class="modal-title-icon">
+                        <i data-lucide="plus-circle"></i>
+                    </div>
+                    <div>
+                        <h3 class="modal-title">Create Community</h3>
+                        <p class="modal-subtitle">Build your own space in the cosmos</p>
+                    </div>
+                </div>
+                <button class="modal-close" id="create-modal-close" aria-label="Close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <form class="modal-form" id="create-community-form" novalidate>
+
+                    <!-- Section: Identity -->
+                    <div class="form-section">
+                        <div class="form-section-title">Identity</div>
+                        <div class="form-row">
+                            <!-- Community Name -->
+                            <div class="form-group form-group-name">
+                                <label for="community-name-input">
+                                    Community Name <span class="required">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    id="community-name-input"
+                                    class="form-input"
+                                    placeholder="e.g., Physics Explorers"
+                                    required
+                                    maxlength="50"
+                                    autocomplete="off"
+                                >
+                                <span class="form-hint">
+                                    <span>Max 50 characters</span>
+                                    <span class="char-count" id="name-char-count">0/50</span>
+                                </span>
+                            </div>
+
+                            <!-- Category -->
+                            <div class="form-group">
+                                <label for="community-category">
+                                    Category <span class="required">*</span>
+                                </label>
+                                <select name="category" id="community-category" class="form-select" required>
+                                    <option value="">Select a category</option>
+                                    <option value="academic">Academic</option>
+                                    <option value="technology">Technology</option>
+                                    <option value="science">Science</option>
+                                    <option value="arts">Arts & Design</option>
+                                    <option value="business">Business</option>
+                                    <option value="gaming">Gaming</option>
+                                    <option value="general">General</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Section: Appearance -->
+                    <div class="form-section">
+                        <div class="form-section-title">Appearance</div>
+
+                        <!-- Icon Picker -->
+                        <div class="form-group">
+                            <label>Community Icon</label>
+                            <div class="icon-picker-search">
+                                <i data-lucide="search"></i>
+                                <input type="text" id="icon-search-input" placeholder="Search icons..." autocomplete="off">
+                            </div>
+                            <div class="icon-picker-grid" id="icon-picker-grid">
+                                <!-- Icons rendered by JS -->
+                            </div>
+                            <input type="hidden" name="icon" id="community-icon-input" value="users">
+                            <span class="form-hint">Click an icon above or search by name</span>
+                        </div>
+
+                        <!-- Color Picker -->
+                        <div class="form-group">
+                            <label>Accent Color</label>
+                            <div class="color-picker-section">
+                                <div class="color-swatches" id="color-swatches">
+                                    <!-- Color swatches rendered by JS -->
+                                </div>
+                                <div class="color-custom-wrap">
+                                    <input type="color" id="color-custom" class="color-custom-input" value="#a855f7">
+                                    <span class="color-custom-label">Custom</span>
+                                </div>
+                            </div>
+                            <input type="hidden" name="color" id="community-color-input" value="#a855f7">
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Section: About -->
+                    <div class="form-section">
+                        <div class="form-section-title">About</div>
+                        <div class="form-group">
+                            <label for="community-description">
+                                Description <span class="required">*</span>
+                            </label>
+                            <textarea
+                                name="description"
+                                id="community-description"
+                                class="form-textarea"
+                                rows="3"
+                                placeholder="What is this community about? What will members discuss and share?"
+                                required
+                                minlength="20"
+                                maxlength="500"
+                            ></textarea>
+                            <span class="form-hint">
+                                <span>Min. 20 characters</span>
+                                <span class="char-count" id="desc-char-count">0/500</span>
+                            </span>
+                            <div class="form-error-msg" id="desc-error" style="display:none;">
+                                <i data-lucide="alert-circle"></i>
+                                <span>Description must be at least 20 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Section: Preview -->
+                    <div class="form-section preview-section">
+                        <div class="form-section-title">Live Preview</div>
+                        <div class="community-preview-card" id="community-preview">
+                            <div class="preview-accent" id="preview-accent"></div>
+                            <div class="preview-header">
+                                <div class="preview-icon" id="preview-icon">
+                                    <i data-lucide="users"></i>
+                                </div>
+                                <div class="preview-info">
+                                    <h4 id="preview-name">Your Community</h4>
+                                    <span class="preview-category-tag" id="preview-category">Select a category</span>
+                                </div>
+                            </div>
+                            <p class="preview-desc" id="preview-desc">Your community description will appear here...</p>
+                            <div class="preview-footer">
+                                <span class="preview-members">
+                                    <i data-lucide="users"></i>
+                                    <span id="preview-members">0 Members</span>
+                                </span>
+                                <span class="preview-joined">Joined</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer">
+                <button class="modal-btn" id="create-modal-cancel">Cancel</button>
+                <button class="modal-btn primary" id="create-modal-confirm" type="submit" form="create-community-form">
+                    <i data-lucide="sparkles" style="width:14px;height:14px;"></i>
+                    <span>Create Community</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <svg viewBox="0 0 32 32" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="16" cy="16" r="6"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(-30 16 16)"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(30 16 16)"/>
+                </svg>
+                <span class="logo-text">COSMOHUB</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item" data-page="DashboardUI.html">
+                        <i data-lucide="home" class="nav-icon"></i>
+                        <span class="nav-text">Home</span>
+                    </li>
+                    <li class="nav-item" data-page="ChatUI.html">
+                        <i data-lucide="message-circle" class="nav-icon"></i>
+                        <span class="nav-text">Chats</span>
+                    </li>
+                    <li class="nav-item" data-page="AnnouncementsUI.html">
+                        <i data-lucide="megaphone" class="nav-icon"></i>
+                        <span class="nav-text">Announcements</span>
+                    </li>
+                    <li class="nav-item" data-page="GalaxyLibraryUI.html">
+                        <i data-lucide="library" class="nav-icon"></i>
+                        <span class="nav-text">Galaxy Library</span>
+                    </li>
+                    <li class="nav-item" data-page="CosmicCalendarUI.html">
+                        <i data-lucide="calendar" class="nav-icon"></i>
+                        <span class="nav-text">Cosmic Calendar</span>
+                    </li>
+                    <li class="nav-item active" data-page="CommunitiesUI.html">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        <span class="nav-text">Communities</span>
+                    </li>
+                    <li class="nav-item" data-page="ProfileUI.html">
+                        <i data-lucide="user" class="nav-icon"></i>
+                        <span class="nav-text">Profile</span>
+                    </li>
+                    <li class="nav-item" data-page="SettingsUI.html">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        <span class="nav-text">Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <img src="assets/community-footer.png" alt="Planet" class="footer-planet">
+                <p class="footer-text">Find your people among cosmos.</p>
+                <p class="footer-text2">Keep Intouch. &#10022;</p>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span class="online-count-dot"></span>
+                <span class="online-count" id="online-count">0</span> Online
+                <button class="collapse-btn" id="collapse-btn" aria-label="Toggle sidebar">
+                    <i data-lucide="chevrons-left"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="top-actions">
+                    <!-- Clock Widget -->
+                    <div class="clock-widget" id="clock-widget">
+                        <span class="clock-time" id="clock-time">--:--</span>
+                        <span class="clock-date" id="clock-date">---</span>
+                    </div>
+                    <button class="create-community-btn" id="create-community-btn">
+                        <i data-lucide="plus" style="width:14px;height:14px;"></i>
+                        <span>Create Community</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Community Grid -->
+            <div class="community-grid">
+
+                <!-- Left Column -->
+                <div class="left-column">
+
+                    <!-- Hero Banner -->
+                    <div class="card community-hero">
+                            <div class="hero-bg"></div>
+    <img src="assets/community-header.png" class="hero-banner-img" alt="">
+                        <div class="hero-content">
+                            <h2>Communities</h2>
+                            <p class="hero-subtitle">Connect with like-minded explorers.<br>Share knowledge, ideas, and <em>grow together</em>.</p>
+                            <div class="stats-row" id="hero-stats">
+                                <div class="stat-box">
+                                    <div class="stat-icon-wrap purple"><i data-lucide="users"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-number" id="stat-communities">0</span>
+                                        <span class="stat-label">Communities</span>
+                                    </div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-icon-wrap cyan"><i data-lucide="user-check"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-number" id="stat-members">0</span>
+                                        <span class="stat-label">Active Members</span>
+                                    </div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-icon-wrap blue"><i data-lucide="calendar-check"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-number" id="stat-events">0</span>
+                                        <span class="stat-label">Events This Month</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs & Filters -->
+                    <div class="tabs-section">
+                        <div class="tabs-row">
+                            <div class="tabs" id="tabs">
+                                <button class="tab active" data-tab="explore">Explore</button>
+                                <button class="tab" data-tab="my-communities">My Communities</button>
+                                <button class="tab" data-tab="invitations">Invitations</button>
+                            </div>
+                            <div class="tabs-actions">
+                                <div class="search-communities">
+                                    <i data-lucide="search" style="width:14px;height:14px;color:var(--text-muted);"></i>
+                                    <input type="text" placeholder="Search communities..." id="community-search">
+                                </div>
+                                <button class="filter-btn" id="filter-btn">
+                                    <i data-lucide="filter" style="width:14px;height:14px;"></i>
+                                    <span>Filters</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="category-pills" id="category-pills">
+                            <button class="pill active" data-category="all">All</button>
+                            <button class="pill" data-category="academic">Academic</button>
+                            <button class="pill" data-category="technology">Technology</button>
+                            <button class="pill" data-category="science">Science</button>
+                            <button class="pill" data-category="arts">Arts & Design</button>
+                            <button class="pill" data-category="business">Business</button>
+                            <button class="pill" data-category="gaming">Gaming</button>
+                            <button class="pill" data-category="general">General</button>
+                            <button class="pill more" data-category="more">More <i data-lucide="chevron-down" style="width:10px;height:10px;"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Featured Communities -->
+                    <div class="card featured-section">
+                        <div class="card-header">
+                            <h3 class="card-title">Featured Communities</h3>
+                            <button class="view-all-btn" id="view-all-featured">View all</button>
+                        </div>
+                        <div class="featured-grid" id="featured-grid">
+                            <div class="empty-state" style="grid-column: 1 / -1;">
+                                <i data-lucide="users"></i>
+                                <p>No communities yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+
+                    <!-- Popular Communities -->
+                    <div class="card rs-card popular-card">
+                        <div class="rs-header">
+                            <h3 class="card-title">Popular Communities</h3>
+                            <button class="rs-link" id="view-all-popular">View all</button>
+                        </div>
+                        <div class="rs-list" id="popular-list">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+
+                    <!-- My Communities -->
+                    <div class="card rs-card my-communities-card">
+                        <div class="rs-header">
+                            <h3 class="card-title">My Communities</h3>
+                            <button class="rs-link" id="manage-communities">Manage</button>
+                        </div>
+                        <div class="rs-list" id="my-communities-list">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="CommunityUI.js"></script>
+</body>
+</html>

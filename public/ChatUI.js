@@ -1067,24 +1067,43 @@ function generateDMChannelId(userA, userB) {
 }
 
 function deleteConversation(convId, convName) {
-    Modal.open('Delete Conversation', 
-        '<p style="color:var(--text-secondary); font-size:13px;">Are you sure you want to delete your conversation with <strong style="color:var(--text-primary);">' + convName + '</strong>?</p>' +
-        '<p style="color:var(--text-muted); font-size:11px; margin-top:8px;">This will remove the conversation from your list. The messages will still exist in the database.</p>',
+    Modal.open('Delete Conversation',
+        '<p style="color:var(--text-secondary); font-size:13px;">Are you sure you want to <strong style="color:var(--accent-red);">permanently delete</strong> your conversation with <strong style="color:var(--text-primary);">' + convName + '</strong>?</p>' +
+        '<p style="color:var(--text-muted); font-size:11px; margin-top:8px;">This will permanently erase all messages from both sides. This action cannot be undone.</p>',
         {
-            confirmText: 'Delete',
+            confirmText: 'Permanently Delete',
             onConfirm: function() {
-                // Remove from recentConversations array
-                var idx = recentConversations.findIndex(function(c) { return c.id === convId; });
-                if (idx !== -1) {
-                    recentConversations.splice(idx, 1);
-                    renderRecentConversations();
-                }
-                // If currently viewing this conversation, switch to global
-                if (currentChannelId === convId) {
-                    switchTab('global');
-                    switchConversation('global', 'global');
-                }
-                showToast('Deleted', 'Conversation removed', 'success', 2000);
+                // Call API to permanently delete from database
+                apiFetch(API_URL + '/api?endpoint=conversations', {
+                    method: 'DELETE',
+                    body: JSON.stringify({ conversation_id: convId })
+                })
+                .then(function(res) {
+                    if (res.ok) {
+                        // Remove from local array
+                        var idx = recentConversations.findIndex(function(c) { return c.id === convId; });
+                        if (idx !== -1) {
+                            recentConversations.splice(idx, 1);
+                            renderRecentConversations();
+                        }
+                        // If currently viewing this conversation, switch to global
+                        if (currentChannelId === convId) {
+                            switchTab('global');
+                            switchConversation('global', 'global');
+                        }
+                        showToast('Deleted', 'Conversation permanently deleted', 'success', 2000);
+                    } else {
+                        return res.json().then(function(err) {
+                            showToast('Error', err.error || 'Failed to delete conversation', 'error', 3000);
+                        }).catch(function() {
+                            showToast('Error', 'Failed to delete conversation', 'error', 3000);
+                        });
+                    }
+                })
+                .catch(function(err) {
+                    console.error('[CosmoHub Chat] Delete conversation error:', err);
+                    showToast('Error', 'Failed to delete conversation. Please try again.', 'error', 3000);
+                });
             }
         }
     );

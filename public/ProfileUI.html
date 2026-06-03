@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - CosmoHub</title>
+    <link rel="stylesheet" href="ProfileUI.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <base target="_self">
+</head>
+<body>
+    <!-- Animated Starfield Background -->
+    <canvas id="starfield-canvas"></canvas>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Title</h3>
+                <button class="modal-close" id="modal-close" aria-label="Close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer" id="modal-footer">
+                <button class="modal-btn" id="modal-cancel">Cancel</button>
+                <button class="modal-btn primary" id="modal-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Crop Modal -->
+    <div class="modal-overlay" id="crop-modal-overlay">
+        <div class="modal-container" style="max-width: 480px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Crop Image</h3>
+                <button class="modal-close" id="crop-modal-close" aria-label="Close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 0; display: flex; justify-content: center; align-items: center; background: var(--bg-primary);">
+                <div id="crop-preview-area" style="width: 100%; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+                    <img id="crop-preview-img" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn" id="crop-cancel">Cancel</button>
+                <button class="modal-btn primary" id="crop-confirm">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <svg viewBox="0 0 32 32" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="16" cy="16" r="6"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(-30 16 16)"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(30 16 16)"/>
+                </svg>
+                <span class="logo-text">COSMOHUB</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item" data-page="DashboardUI.html">
+                        <i data-lucide="home" class="nav-icon"></i>
+                        <span class="nav-text">Home</span>
+                    </li>
+                    <li class="nav-item" data-page="ChatUI.html">
+                        <i data-lucide="message-circle" class="nav-icon"></i>
+                        <span class="nav-text">Chats</span>
+                    </li>
+                    <li class="nav-item" data-page="AnnouncementsUI.html">
+                        <i data-lucide="megaphone" class="nav-icon"></i>
+                        <span class="nav-text">Announcements</span>
+                    </li>
+                    <li class="nav-item" data-page="GalaxyLibraryUI.html">
+                        <i data-lucide="library" class="nav-icon"></i>
+                        <span class="nav-text">Galaxy Library</span>
+                    </li>
+                    <li class="nav-item" data-page="CosmicCalendarUI.html">
+                        <i data-lucide="calendar" class="nav-icon"></i>
+                        <span class="nav-text">Cosmic Calendar</span>
+                    </li>
+                    <li class="nav-item" data-page="CommunityUI.html">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        <span class="nav-text">Communities</span>
+                    </li>
+                    <li class="nav-item active" data-page="ProfileUI.html">
+                        <i data-lucide="user" class="nav-icon"></i>
+                        <span class="nav-text">Profile</span>
+                    </li>
+                    <li class="nav-item" data-page="SettingsUI.html">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        <span class="nav-text">Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <img src="assets/profile-footer.png" alt="Planet" class="footer-planet">
+                <p class="footer-text">Your story shines brightest<br>in your own orbit.</p>
+                <p class="footer-text2">Chart your path across the universe.&#10022;</p>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span class="online-count-dot"></span>
+                <span class="online-count" id="online-count">0</span> Online
+                <button class="collapse-btn" id="collapse-btn" aria-label="Toggle sidebar">
+                    <i data-lucide="chevrons-left"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="search-bar" id="search-bar">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" placeholder="Search in CosmoHub..." id="search-input">
+                    <span class="shortcut">Ctrl /</span>
+                </div>
+                <div class="top-actions">
+                    <button class="icon-btn notification-btn" id="notification-btn" aria-label="Notifications">
+                        <i data-lucide="bell" class="action-icon"></i>
+                        <span class="badge" id="notif-badge">0</span>
+                    </button>
+                    <button class="icon-btn message-btn" id="message-btn" aria-label="Messages">
+                        <i data-lucide="mail" class="action-icon"></i>
+                        <span class="badge" id="msg-badge">0</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Profile Banner -->
+            <div class="card profile-banner">
+                <div class="banner-bg-wrap" id="banner-drop-zone">
+                    <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=1200&h=400&fit=crop" alt="Banner" class="banner-bg-img" id="banner-img">
+                    <div class="banner-overlay"></div>
+                    <div class="banner-upload-overlay">
+                        <i data-lucide="camera"></i>
+                        <span>Change Cover</span>
+                    </div>
+                    <input type="file" id="banner-upload" accept="image/*" style="display: none;">
+                </div>
+                <div class="profile-header-content">
+                    <div class="avatar-wrapper" id="avatar-drop-zone">
+                        <div class="avatar-container" id="profile-avatar">
+                            <div class="profile-avatar-placeholder">
+                                <i data-lucide="user" class="profile-placeholder-icon"></i>
+                            </div>
+                        </div>
+                        <div class="avatar-upload-overlay">
+                            <i data-lucide="camera"></i>
+                        </div>
+                        <span class="online-status"></span>
+                        <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name-row">
+                            <h1 class="profile-name" id="profile-name">Alex Mercer</h1>
+                            <span class="profile-verified" id="profile-verified" title="Verified" style="display:none;">
+                                <i data-lucide="badge-check"></i>
+                            </span>
+                        </div>
+                        <p class="profile-handle" id="profile-handle">@alexmercer</p>
+                        <p class="profile-bio" id="profile-bio">Explorer of knowledge, seeker of stars. <span class="sparkle">&#10022;</span></p>
+                        <div class="profile-meta">
+                            <span class="meta-item">
+                                <i data-lucide="map-pin" class="meta-icon"></i>
+                                <span id="profile-location">Andromeda Galaxy</span>
+                            </span>
+                            <span class="meta-item">
+                                <i data-lucide="calendar" class="meta-icon"></i>
+                                <span id="profile-joined">Joined Feb 12, 2025</span>
+                            </span>
+                            <span class="meta-item">
+                                <i data-lucide="link" class="meta-icon"></i>
+                                <a href="#" id="profile-website" target="_blank" rel="noopener">cosmohub.dev</a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="edit-profile-btn" id="edit-profile-btn">
+                            <i data-lucide="pencil" class="edit-icon"></i>
+                            Edit Profile
+                        </button>
+                        <div class="status-btn-wrap">
+                            <button class="status-btn" id="status-btn">
+                                <span class="status-dot online"></span>
+                                <span class="status-text">Online</span>
+                                <i data-lucide="chevron-down" style="width:14px;height:14px;"></i>
+                            </button>
+                            <div class="status-dropdown" id="status-dropdown">
+                                <button class="status-option" data-status="online">
+                                    <span class="s-dot online"></span> Online
+                                </button>
+                                <button class="status-option" data-status="invisible">
+                                    <span class="s-dot invisible"></span> Invisible
+                                </button>
+                                <button class="status-option" data-status="dnd">
+                                    <span class="s-dot dnd"></span> Do Not Disturb
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Stats -->
+            <div class="card profile-stats-card">
+                <div class="profile-stats">
+                    <div class="stat-col" id="stat-posts">
+                        <span class="stat-col-number" id="stat-posts-count">0</span>
+                        <span class="stat-col-label">Posts</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-col" id="stat-communities">
+                        <span class="stat-col-number" id="stat-communities-count">0</span>
+                        <span class="stat-col-label">Communities</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-col" id="stat-resources">
+                        <span class="stat-col-number" id="stat-resources-count">0</span>
+                        <span class="stat-col-label">Resources</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-col" id="stat-followers">
+                        <span class="stat-col-number" id="stat-followers-count">0</span>
+                        <span class="stat-col-label">Followers</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-col" id="stat-following">
+                        <span class="stat-col-number" id="stat-following-count">0</span>
+                        <span class="stat-col-label">Following</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Bar -->
+            <div class="card quick-actions-bar">
+                <button class="qa-btn" id="qa-new-post">
+                    <i data-lucide="plus-circle"></i>
+                    <span>New Post</span>
+                </button>
+                <button class="qa-btn" id="qa-upload-resource">
+                    <i data-lucide="upload"></i>
+                    <span>Upload Resource</span>
+                </button>
+                <button class="qa-btn" id="qa-create-event">
+                    <i data-lucide="calendar-plus"></i>
+                    <span>Create Event</span>
+                </button>
+                <button class="qa-btn" id="qa-invite">
+                    <i data-lucide="user-plus"></i>
+                    <span>Invite Friends</span>
+                </button>
+                <button class="qa-btn" id="qa-settings">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </button>
+            </div>
+
+            <!-- Feed Filters -->
+            <div class="feed-nav">
+                <button class="feed-nav-btn active" data-filter="all">All</button>
+                <button class="feed-nav-btn" data-filter="posts">Posts</button>
+                <button class="feed-nav-btn" data-filter="activity">Activity</button>
+                <button class="feed-nav-btn" data-filter="resources">Resources</button>
+                <button class="feed-nav-btn" data-filter="about">About</button>
+            </div>
+
+            <!-- Feed Container -->
+            <div class="feed-container">
+
+                <!-- About Section -->
+                <div class="feed-section" id="feed-about" data-section="about">
+                    <div class="card about-feed-card">
+                        <div class="about-feed-header">
+                            <i data-lucide="user" class="about-icon"></i>
+                            <h3 class="card-title">About</h3>
+                        </div>
+                        <p class="about-text" id="about-text">Hi! I'm Alex, an astronomy enthusiast and computer science student. I love exploring new concepts, building projects, and sharing knowledge with amazing people in this cosmic community.</p>
+                        <div class="profile-tags" id="profile-tags">
+                            <span class="tag astronomy"><i data-lucide="atom" class="tag-icon"></i> Astronomy</span>
+                            <span class="tag developer"><i data-lucide="code-2" class="tag-icon"></i> Web Developer</span>
+                            <span class="tag ai"><i data-lucide="brain" class="tag-icon"></i> AI Enthusiast</span>
+                            <span class="tag solver"><i data-lucide="puzzle" class="tag-icon"></i> Problem Solver</span>
+                        </div>
+                    </div>
+
+                    <!-- Skills Section -->
+                    <div class="card skills-card">
+                        <div class="skills-header">
+                            <i data-lucide="zap" class="skills-icon"></i>
+                            <h3 class="card-title">Skills</h3>
+                        </div>
+                        <div class="skills-list" id="skills-list">
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">JavaScript</span>
+                                    <span class="skill-level">95%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" data-width="95" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">Python</span>
+                                    <span class="skill-level">88%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" data-width="88" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">Astrophysics</span>
+                                    <span class="skill-level">72%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" data-width="72" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">Machine Learning</span>
+                                    <span class="skill-level">80%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" data-width="80" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="skill-item">
+                                <div class="skill-info">
+                                    <span class="skill-name">UI/UX Design</span>
+                                    <span class="skill-level">65%</span>
+                                </div>
+                                <div class="skill-bar">
+                                    <div class="skill-fill" data-width="65" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Achievements Section -->
+                    <div class="card achievements-card">
+                        <div class="achievements-header">
+                            <i data-lucide="trophy" class="achievements-icon"></i>
+                            <h3 class="card-title">Achievements</h3>
+                        </div>
+                        <div class="achievements-grid" id="achievements-grid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Post -->
+                <div class="create-post-card" id="feed-create-post" data-section="create-post">
+                    <div class="create-post-top">
+                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop&crop=face" alt="" class="create-post-avatar" id="create-post-avatar">
+                        <div class="create-post-input-wrap" id="create-post-trigger">
+                            <span>What's on your mind, <span id="create-post-name">Alex</span>?</span>
+                        </div>
+                    </div>
+                    <div class="create-post-divider"></div>
+                    <div class="create-post-bottom">
+                        <button class="cp-btn" id="cp-photo"><i data-lucide="image"></i> Photo</button>
+                        <button class="cp-btn" id="cp-resource"><i data-lucide="paperclip"></i> Resource</button>
+                        <button class="cp-btn" id="cp-event"><i data-lucide="calendar"></i> Event</button>
+                    </div>
+                </div>
+
+                <!-- Posts Feed -->
+                <div class="feed-section" id="feed-posts" data-section="posts">
+                    <div class="posts-feed" id="posts-feed">
+                        <div class="empty-state">
+                            <i data-lucide="newspaper"></i>
+                            <p>No posts yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Feed -->
+                <div class="feed-section" id="feed-activity" data-section="activity">
+                    <div class="activity-feed" id="activity-feed">
+                        <div class="empty-state">
+                            <i data-lucide="activity"></i>
+                            <p>No activity yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resources Feed -->
+                <div class="feed-section" id="feed-resources" data-section="resources">
+                    <div class="resources-feed" id="resources-feed">
+                        <div class="empty-state">
+                            <i data-lucide="folder-open"></i>
+                            <p>No resources uploaded yet</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="ProfileUI.js"></script>
+</body>
+</html>

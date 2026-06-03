@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CosmoHub - Settings</title>
+    <link rel="stylesheet" href="SettingsUI.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+<base target="_blank">
+</head>
+<body>
+    <canvas id="starfield-canvas"></canvas>
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Title</h3>
+                <button class="modal-close" id="modal-close" aria-label="Close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer" id="modal-footer">
+                <button class="modal-btn" id="modal-cancel">Cancel</button>
+                <button class="modal-btn primary" id="modal-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <svg viewBox="0 0 32 32" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="16" cy="16" r="6"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(-30 16 16)"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(30 16 16)"/>
+                </svg>
+                <span class="logo-text">COSMOHUB</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item" data-page="DashboardUI.html">
+                        <i data-lucide="home" class="nav-icon"></i>
+                        <span class="nav-text">Home</span>
+                    </li>
+                    <li class="nav-item" data-page="ChatUI.html">
+                        <i data-lucide="message-circle" class="nav-icon"></i>
+                        <span class="nav-text">Chats</span>
+                    </li>
+                    <li class="nav-item" data-page="AnnouncementsUI.html">
+                        <i data-lucide="megaphone" class="nav-icon"></i>
+                        <span class="nav-text">Announcements</span>
+                    </li>
+                    <li class="nav-item" data-page="GalaxyLibraryUI.html">
+                        <i data-lucide="library" class="nav-icon"></i>
+                        <span class="nav-text">Galaxy Library</span>
+                    </li>
+                    <li class="nav-item" data-page="CosmicCalendarUI.html">
+                        <i data-lucide="calendar" class="nav-icon"></i>
+                        <span class="nav-text">Cosmic Calendar</span>
+                    </li>
+                    <li class="nav-item" data-page="CommunityUI.html">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        <span class="nav-text">Communities</span>
+                    </li>
+                    <li class="nav-item" data-page="ProfileUI.html">
+                        <i data-lucide="user" class="nav-icon"></i>
+                        <span class="nav-text">Profile</span>
+                    </li>
+                    <li class="nav-item active" data-page="SettingsUI.html">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        <span class="nav-text">Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <img src="assets/settings-footer.png" alt="Planet" class="footer-planet">
+                <p class="footer-text">Shape your universe<br>the way you want.</p>
+                <p class="footer-text2">Control your cosmos, your way. &#10022;</p>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span class="online-count-dot"></span>
+                <span class="online-count" id="online-count">0</span> Online
+                <button class="collapse-btn" id="collapse-btn" aria-label="Toggle sidebar">
+                    <i data-lucide="chevrons-left"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div style="flex:1"></div>
+                <div class="top-actions">
+                    <button class="icon-btn notification-btn" id="notification-btn" aria-label="Notifications">
+                        <i data-lucide="bell" class="action-icon"></i>
+                        <span class="badge" id="notif-badge">0</span>
+                    </button>
+                    <button class="icon-btn message-btn" id="message-btn" aria-label="Messages">
+                        <i data-lucide="mail" class="action-icon"></i>
+                        <span class="badge" id="msg-badge">0</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Settings Page -->
+            <div class="settings-page" id="settings-page">
+                <div class="settings-header">
+                    <h1>Settings</h1>
+                    <p>Manage your account and preferences.</p>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-item" data-modal="account">
+                        <div class="settings-item-icon purple">
+                            <i data-lucide="user"></i>
+                        </div>
+                        <div class="settings-item-body">
+                            <div class="settings-item-title">Account</div>
+                            <div class="settings-item-desc">View and update your account information.</div>
+                        </div>
+                        <div class="settings-item-action">
+                            <i data-lucide="chevron-right" class="settings-arrow"></i>
+                        </div>
+                    </div>
+
+                    <div class="settings-item" data-modal="security">
+                        <div class="settings-item-icon blue">
+                            <i data-lucide="lock"></i>
+                        </div>
+                        <div class="settings-item-body">
+                            <div class="settings-item-title">Security</div>
+                            <div class="settings-item-desc">Change your password and manage security settings.</div>
+                        </div>
+                        <div class="settings-item-action">
+                            <i data-lucide="chevron-right" class="settings-arrow"></i>
+                        </div>
+                    </div>
+
+                    <div class="settings-item" data-modal="notifications">
+                        <div class="settings-item-icon cyan">
+                            <i data-lucide="bell"></i>
+                        </div>
+                        <div class="settings-item-body">
+                            <div class="settings-item-title">Notifications</div>
+                            <div class="settings-item-desc">Choose what notifications you want to receive.</div>
+                        </div>
+                        <div class="settings-item-action">
+                            <i data-lucide="chevron-right" class="settings-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-item" id="appearance-item">
+                        <div class="settings-item-icon pink">
+                            <i data-lucide="palette"></i>
+                        </div>
+                        <div class="settings-item-body">
+                            <div class="settings-item-title">Appearance</div>
+                            <div class="settings-item-desc">Customize the theme and look of CosmoHub.</div>
+                        </div>
+                        <div class="settings-item-action">
+                            <div class="settings-dropdown" id="theme-dropdown">
+                                <span class="theme-dot" id="theme-dot"></span>
+                                <span id="theme-label">Cosmic Dark</span>
+                                <i data-lucide="chevron-down"></i>
+                            </div>
+                            <i data-lucide="chevron-right" class="settings-arrow"></i>
+                        </div>
+                    </div>
+
+                    <div class="settings-item" id="language-item">
+                        <div class="settings-item-icon orange">
+                            <i data-lucide="globe"></i>
+                        </div>
+                        <div class="settings-item-body">
+                            <div class="settings-item-title">Language</div>
+                            <div class="settings-item-desc">Select your preferred language.</div>
+                        </div>
+                        <div class="settings-item-action">
+                            <div class="settings-dropdown" id="lang-dropdown">
+                                <i data-lucide="globe" style="width:12px;height:12px;"></i>
+                                <span id="lang-label">English</span>
+                                <i data-lucide="chevron-down"></i>
+                            </div>
+                            <i data-lucide="chevron-right" class="settings-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-item" data-modal="help">
+                        <div class="settings-item-icon green">
+                            <i data-lucide="help-circle"></i>
+                        </div>
+                        <div class="settings-item-body">
+                            <div class="settings-item-title">Help & Support</div>
+                            <div class="settings-item-desc">Get help or contact our support team.</div>
+                        </div>
+                        <div class="settings-item-action">
+                            <i data-lucide="chevron-right" class="settings-arrow"></i>
+                        </div>
+                    </div>
+
+                    <div class="settings-item" data-modal="about">
+                        <div class="settings-item-icon indigo">
+                            <i data-lucide="info"></i>
+                        </div>
+                        <div class="settings-item-body">
+                            <div class="settings-item-title">About CosmoHub</div>
+                            <div class="settings-item-desc">Learn more about CosmoHub.</div>
+                        </div>
+                        <div class="settings-item-action">
+                            <i data-lucide="chevron-right" class="settings-arrow"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-footer">
+                    <i data-lucide="sparkles"></i>
+                    <span>CosmoHub &copy; 2025. All rights reserved.</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="SettingsUI.js"></script>
+</body>
+</html>

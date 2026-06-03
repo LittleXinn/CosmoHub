@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CosmoHub Dashboard</title>
+    <link rel="stylesheet" href="DashboardUI.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <base target="_self">
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+    <!-- Animated Starfield Background -->
+    <canvas id="starfield-canvas"></canvas>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">Title</h3>
+                <button class="modal-close" id="modal-close" aria-label="Close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer" id="modal-footer">
+                <button class="modal-btn" id="modal-cancel">Cancel</button>
+                <button class="modal-btn primary" id="modal-confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <svg viewBox="0 0 32 32" class="logo-icon" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="16" cy="16" r="6"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(-30 16 16)"/>
+                    <ellipse cx="16" cy="16" rx="14" ry="5" transform="rotate(30 16 16)"/>
+                </svg>
+                <span class="logo-text">COSMOHUB</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-page="DashboardUI.html">
+                        <i data-lucide="home" class="nav-icon"></i>
+                        <span class="nav-text">Home</span>
+                    </li>
+                    <li class="nav-item" data-page="ChatUI.html">
+                        <i data-lucide="message-circle" class="nav-icon"></i>
+                        <span class="nav-text">Chats</span>
+                    </li>
+                    <li class="nav-item" data-page="AnnouncementsUI.html">
+                        <i data-lucide="megaphone" class="nav-icon"></i>
+                        <span class="nav-text">Announcements</span>
+                    </li>
+                    <li class="nav-item" data-page="GalaxyLibraryUI.html">
+                        <i data-lucide="library" class="nav-icon"></i>
+                        <span class="nav-text">Galaxy Library</span>
+                    </li>
+                    <li class="nav-item" data-page="CosmicCalendarUI.html">
+                        <i data-lucide="calendar" class="nav-icon"></i>
+                        <span class="nav-text">Cosmic Calendar</span>
+                    </li>
+                    <li class="nav-item" data-page="CommunityUI.html">
+                        <i data-lucide="users" class="nav-icon"></i>
+                        <span class="nav-text">Communities</span>
+                    </li>
+                    <li class="nav-item" data-page="ProfileUI.html">
+                        <i data-lucide="user" class="nav-icon"></i>
+                        <span class="nav-text">Profile</span>
+                    </li>
+                    <li class="nav-item" data-page="SettingsUI.html">
+                        <i data-lucide="settings" class="nav-icon"></i>
+                        <span class="nav-text">Settings</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <img src="assets/dashboard-footer.png" alt="Planet" class="footer-planet">
+                <p class="footer-text">Welcome to your<br>universe of learning.</p>
+                <p class="footer-text2">Keep exploring. &#10022;</p>
+            </div>
+
+            <div class="sidebar-bottom">
+                <span class="online-count-dot"></span>
+                <span class="online-count" id="online-count">0</span> Online
+                <button class="collapse-btn" id="collapse-btn" aria-label="Toggle sidebar">
+                    <i data-lucide="chevrons-left"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="search-bar" id="search-bar">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" placeholder="Search in CosmoHub..." id="search-input">
+                    <span class="shortcut">Ctrl /</span>
+                </div>
+                <div class="top-actions">
+                    <!-- Clock Widget -->
+                    <div class="clock-widget" id="clock-widget">
+                        <span class="clock-time" id="clock-time">--:--</span>
+                        <span class="clock-date" id="clock-date">---</span>
+                    </div>
+                    <button class="icon-btn notification-btn" id="notification-btn" aria-label="Notifications">
+                        <i data-lucide="bell" class="action-icon"></i>
+                        <span class="badge" id="notif-badge">0</span>
+                    </button>
+                    <button class="icon-btn message-btn" id="message-btn" aria-label="Messages">
+                        <i data-lucide="mail" class="action-icon"></i>
+                        <span class="badge" id="msg-badge">0</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+
+                <!-- Left Column -->
+                <div class="left-column">
+
+                    <!-- Welcome Banner -->
+                    <div class="card welcome-banner">
+                        <div class="welcome-content">
+                            <h2>Welcome back, Explorer! &#128075;</h2>
+                            <p class="welcome-subtitle">In a universe of possibilities, <em>learning lights the way.</em></p>
+                            <div class="stats-row" id="stats-row">
+                                <div class="stat-box">
+                                    <div class="stat-icon-wrap purple"><i data-lucide="users"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-number" id="stat-active-users">0</span>
+                                        <span class="stat-label">Active Users<span class="stat-online-dot"></span></span>
+                                    </div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-icon-wrap pink"><i data-lucide="megaphone"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-number" id="stat-unread-announcements">0</span>
+                                        <span class="stat-label">Unread Announcements</span>
+                                    </div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-icon-wrap cyan"><i data-lucide="check-circle-2"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-number" id="stat-todo-tasks">0</span>
+                                        <span class="stat-label">To-Do Tasks</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <img src="assets/dashboard-header.png" alt="Galaxy" class="banner-bg">
+                    </div>
+
+                    <!-- Middle Row: Announcements + Upcoming Events -->
+                    <div class="middle-row">
+
+                        <!-- Recent Announcements -->
+                        <div class="card recent-announcements">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Announcements</h3>
+                                <button class="view-all-btn" id="view-all-announcements">View all</button>
+                            </div>
+                            <div class="announcement-list" id="announcement-list">
+                                <div class="empty-state">
+                                    <i data-lucide="megaphone"></i>
+                                    <p>No announcements yet</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upcoming Events -->
+                        <div class="card upcoming-events">
+                            <div class="card-header">
+                                <h3 class="card-title">Upcoming Events</h3>
+                                <button class="view-all-btn" id="view-all-events">View calendar</button>
+                            </div>
+                            <div class="events-list" id="events-list">
+                                <div class="empty-state">
+                                    <i data-lucide="calendar"></i>
+                                    <p>No upcoming events</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Trending Communities -->
+                    <div class="card trending-communities">
+                        <div class="card-header">
+                            <h3 class="card-title">Trending Communities</h3>
+                            <button class="view-all-btn" id="view-all-communities">View all</button>
+                        </div>
+                        <div class="communities-grid" id="communities-grid">
+                            <div class="empty-state" style="grid-column: 1 / -1;">
+                                <i data-lucide="users"></i>
+                                <p>No communities yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column -->
+                <div class="right-column">
+
+                    <!-- User Profile Card -->
+                    <div class="card profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar" id="profile-avatar">
+                                <div class="profile-avatar-placeholder">
+                                    <i data-lucide="user" class="profile-placeholder-icon"></i>
+                                </div>
+                            </div>
+                            <div class="profile-info">
+                                <div class="profile-name-row">
+                                    <span class="profile-name" id="profile-name">Explorer</span>
+                                    <span class="profile-status-dot"></span>
+                                </div>
+                                <span class="profile-handle" id="profile-handle">@explorer</span>
+                                <span class="profile-role" id="profile-role">Member</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- My Tasks -->
+                    <div class="card my-tasks">
+                        <div class="card-header">
+                            <h3 class="card-title">My Tasks</h3>
+                            <button class="view-all-btn" id="view-all-tasks">View all</button>
+                        </div>
+                        <div class="tasks-list" id="tasks-list">
+                            <div class="empty-state">
+                                <i data-lucide="check-circle-2"></i>
+                                <p>No tasks yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="DashboardUI.js"></script>
+</body>
+</html>

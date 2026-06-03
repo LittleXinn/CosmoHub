@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/auth/:path*", "destination": "/api" },
+    { "source": "/api/check-username", "destination": "/api" },
+    { "source": "/api", "destination": "/api" }
+  ]
+}
