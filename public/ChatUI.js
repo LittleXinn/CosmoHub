@@ -692,7 +692,7 @@ function updateJoinOverlay(show) {
 
 function checkCommunityMembership() {
     if (!currentCommunityId || !currentUser.id) return;
-    apiFetch(API_URL + '/api/community-members?community_id=' + currentCommunityId)
+    apiFetch(API_URL + '/api?endpoint=community-members&community_id=' + currentCommunityId)
         .then(function(r) { return r.json(); })
         .then(function(data) {
             if (data && Array.isArray(data)) {
@@ -765,7 +765,7 @@ function sendMessage() {
 
 function loadMessagesForChannel(channelId) {
     if (!channelId) return;
-    apiFetch(API_URL + '/api/messages?channel_id=' + encodeURIComponent(channelId))
+    apiFetch(API_URL + '/api?endpoint=messages&channel_id=' + encodeURIComponent(channelId))
         .then(function(res) {
             if (!res.ok) throw new Error('HTTP ' + res.status);
             return res.json();
